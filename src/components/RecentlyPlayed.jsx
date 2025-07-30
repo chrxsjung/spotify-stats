@@ -1,16 +1,19 @@
 function RecentlyPlayed({ track, playedAt, index }) {
   const imageUrl = track?.album?.images?.[0]?.url || "/placeholder.png";
 
-  // Format the played_at timestamp
   const formatPlayedAt = (timestamp) => {
     if (!timestamp) return "";
 
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+    const diffInMs = now - date;
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
 
-    if (diffInHours < 1) {
+    if (diffInMinutes < 1) {
       return "Just now";
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
     } else if (diffInHours < 24) {
       return `${diffInHours}h ago`;
     } else {
