@@ -31,11 +31,21 @@ function Callback() {
   // - then redirect the user to the dashboard
 
   useEffect(() => {
+    // Check for error first (user cancelled)
+    const error = new URLSearchParams(window.location.search).get("error");
+    if (error) {
+      // Clean up any stored data
+      localStorage.removeItem("code_verifier");
+      navigate("/"); // Redirect back to home page
+      return;
+    }
+
     const code = new URLSearchParams(window.location.search).get("code");
     const codeVerifier = localStorage.getItem("code_verifier");
 
     if (!code || !codeVerifier) {
       console.error("Missing code or code_verifier");
+      navigate("/"); // Redirect back to home page if missing required data
       return;
     }
 

@@ -6,29 +6,46 @@ function TrackCard() {
   const [userTracks, setUserTracks] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState("long_term");
 
   useEffect(() => {
-    getSpotifyTracks()
+    setLoading(true);
+    getSpotifyTracks(timeRange)
       .then((data) => {
         setUserTracks(data);
-        setLoading(false);
+        setError(null);
       })
       .catch((err) => {
         console.error("❌ Failed to load tracks:", err.message);
         setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+        setUserTracks([]);
+      })
+      .finally(() => setLoading(false));
+  }, [timeRange]);
 
   return (
     <div className="bg-black/20 backdrop-blur-sm rounded-lg p-6 border border-gray-800">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-white">Top Tracks</h2>
         <div className="flex space-x-2">
-          <button className="bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-3 py-2 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <button
+            onClick={() => setTimeRange("long_term")}
+            className={`font-bold text-sm px-3 py-2 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl ${
+              timeRange === "long_term"
+                ? "bg-green-500 text-black"
+                : "bg-white text-black hover:bg-gray-100"
+            }`}
+          >
             All Time
           </button>
-          <button className="bg-green-500 hover:bg-green-400 text-black font-bold text-sm px-3 py-2 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <button
+            onClick={() => setTimeRange("short_term")}
+            className={`font-bold text-sm px-3 py-2 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl ${
+              timeRange === "short_term"
+                ? "bg-green-500 text-black"
+                : "bg-white text-black hover:bg-gray-100"
+            }`}
+          >
             Last Month
           </button>
         </div>
