@@ -23,43 +23,29 @@
 
 ### react 
 
-### 🔄 step 1: component initialization and first render
+i use useNavigate to navigate through routes through my Routes setup.  navigate("/dashboard")
 
-- the function component is called by react  
-- **`usestate()` initializes state variables** like: `loading`, `error`, and `data` (e.g. `currenttrack`, `usergenres`, `recentlyplayed`)  
-- the component returns jsx based on initial state:  
-  - **spinner is shown if `loading` is `true`**  
-  - **no content is rendered if `data` is `null` or empty**  
-  - no error is shown initially  
+the ArtistCard, GenreCard, RecentlyPlayedCard, and TrackCard is called by Dashboard.jsx
 
----
+all 4 cards are pretty much the same in terms of useState and useEffect implementation. 
+   
+basically it goes like this 
 
-### ⚙️ step 2: `useeffect` runs after first render
+useState is like this:
+const [thing, setThing] = useState("initial");
 
-- **react runs the `useeffect` hook after the first render**  
-- if a dependency array is provided, `useeffect` only runs when those values change (or once on mount)  
-- inside `useeffect`:  
-  - optionally calls **`setloading(true)`** to show spinner  
-  - **calls async fetch function** (e.g. `getusergenres`, `getcurrentlyplaying`)  
-  - on success: **`setstate()` is called with new data**, and error is cleared  
-  - on failure: **`seterror()` is called with error message**  
-  - **`setloading(false)`** is always called at the end (via `finally` or after `try/catch`)  
+so thing is the actual state value
+and setThing is a function that is called which changes the state with the value it was called with 
+	
+   1. timeRange is stored in useState (starts as "long_term")
+   2. when a button is clicked, setTimeRange() is called
+   3. this changes the timeRange state value
+   4. because timeRange is in the useEffect dependency array [timeRange]
+   5. the useEffect automatically runs again with the new timeRange value
+   6. this triggers a new API call with new param and re-renders the component with fresh data
+   
+   flow: button click → setTimeRange() → state change → useEffect runs → new data
 
----
+useEffect is this. it has a dependency array and if that value is changed the api calls again and updates ArtistCard (or other cards) with new info 
 
-### 🔁 step 3: state update triggers re-render
-
-- **when `data`, `loading`, or `error` changes, react re-renders the component**  
-- the component re-evaluates based on updated state:  
-  - **if `loading` is false, spinner is hidden**  
-  - **if `error` exists, show the error message**  
-  - **if `data` exists, map over it or render values**  
-  - **if `data` is empty, show a fallback message** (e.g. `"no genres found"`, `"not playing"`)  
-
----
-
-### 🔄 step 4: polling or manual refresh (if used)
-
-- some components use `setinterval()` to **automatically refetch data every few seconds/minutes**  
-- some components provide a **refresh button that manually triggers the fetch function**  
-- both methods repeat steps 2 and 3  
+useEffect runs one time when the page runs then can be run again.
