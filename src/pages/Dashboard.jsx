@@ -3,15 +3,15 @@ import GenreCard from "../components/GenreCard.jsx";
 import TrackCard from "../components/TrackCard.jsx";
 import RecentlyPlayedCard from "../components/RecentlyPlayedCard.jsx";
 import Profile from "../components/Profile.jsx";
+import LogoutButton from "../components/Logout.jsx";
 
 function Dashboard() {
-
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-gray-900 via-black to-gray-900">
       {/* Header */}
       <header className="bg-black/20 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
                 <svg
@@ -26,6 +26,7 @@ function Dashboard() {
                 Spotify Stats
               </h1>
             </div>
+            <LogoutButton />
           </div>
         </div>
       </header>

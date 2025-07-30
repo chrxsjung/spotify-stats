@@ -1,8 +1,16 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { getSpotifyLoginUrl } from "./auth/login.js";
+import Callback from "./pages/Callback.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import { useEffect } from "react";
 
 function Home() {
   const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const loginUrl = await getSpotifyLoginUrl();
+    window.location.href = loginUrl;
+  };
 
   return (
     <div className="min-h-screen text-white flex items-center justify-center bg-gradient-to-br from-green-900 via-black to-green-800">
@@ -30,7 +38,7 @@ function Home() {
           Your personal music analytics dashboard
         </p>
         <button
-          onClick={() => navigate("/dashboard")}
+          onClick={handleLogin}
           className="bg-green-500 hover:bg-green-400 text-black font-bold px-8 py-4 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
           Connect with Spotify
@@ -48,6 +56,7 @@ function Home() {
 function App() {
   return (
     <Routes>
+      <Route path="/callback" element={<Callback />} />
       <Route path="/" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
