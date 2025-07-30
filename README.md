@@ -1,110 +1,33 @@
-## 🔐 Authentication Flow
+first i generate a code that is 64 letters long. 
+then i hash it using SHA256 and base64 url encode it. this = code_challange.
 
-This app implements **Spotify OAuth 2.0 with PKCE** (Proof Key for Code Exchange) for secure client-side authentication without requiring a backend server.
+then i redirect my user to spotify auth url and i append 
+client_id
 
-### 📁 File Structure
+response_type=code
 
-```
-src/
-├── auth/
-│   ├── pkce.js              # PKCE code generation and challenge creation
-│   ├── login.js             # Login URL construction and verifier storage
-│   ├── spotify-profile.js   # API calls to fetch user data
-│   └── _notes.js            # Detailed implementation notes
-├── pages/
-│   ├── Callback.jsx         # Token exchange handling
-│   └── Dashboard.jsx        # Main dashboard interface
-├── components/              # UI components for displaying data
-└── App.jsx                  # Main app routing and login button
-```
+redirect_uri
 
-## 🚀 Implementation Steps
+code_challenge
 
-### 1. Generate Secure Code Verifier
+code_challenge_method=S256
 
-- **File:** `src/auth/pkce.js`
-- **Function:** `generateCodeVerifier()`
-- **Purpose:** Creates a high-entropy random string used later to prove app identity
+scope (optional)
 
-### 2. Create Code Challenge
+then the user approves and spotify directs me to redirect uri which is callback.
 
-- **File:** `src/auth/pkce.js`
-- **Function:** `generateCodeChallenge()`
-- **Purpose:** Securely hashes the verifier into a format Spotify can compare later
+then there is where i extract the code from url and make the POST req to get the token with 
 
-### 3. Build Spotify Login URL
+grant_type=authorization_code
 
-- **File:** `src/auth/login.js`
-- **Function:** `getSpotifyLoginUrl()`
-- **Purpose:** Constructs the full authorization URL with all required parameters
+code (from URL)
 
-### 4. Store Code Verifier
+redirect_uri
 
-- **File:** `src/auth/login.js`
-- **Purpose:** Saves the verifier in localStorage for later token exchange validation
+client_id
 
-### 5. Handle User Login
+code_verifier (the original one, not hashed)
 
-- **File:** `src/App.jsx` (Home component)
-- **Function:** `handleLogin()`
-- **Purpose:** Initiates the OAuth flow by redirecting user to Spotify
+then spotify verifies the code and if its good they send me a token i can make api requests with. 
 
-### 6. Process Spotify Redirect
-
-- **File:** `src/pages/Callback.jsx`
-- **Function:** `useEffect()` inside Callback component
-- **Purpose:** Handles the redirect from Spotify and exchanges code for access token
-
-**Responsibilities:**
-
-- Extract the `code` from the redirected URL
-- Retrieve the saved `code_verifier` from localStorage
-- Send POST request to Spotify's `/api/token` endpoint
-- Store the `access_token` in localStorage
-- Navigate user to dashboard
-
-### 7. Token Exchange Details
-
-**Endpoint:** `https://accounts.spotify.com/api/token`
-
-**Headers:**
-
-```javascript
-{
-  "Content-Type": "application/x-www-form-urlencoded"
-}
-```
-
-**Body Parameters:**
-
-```javascript
-{
-  client_id: VITE_SPOTIFY_CLIENT_ID,
-  grant_type: "authorization_code",
-  code: extracted_from_url,
-  redirect_uri: VITE_SPOTIFY_REDIRECT_URI,
-  code_verifier: from_localStorage
-}
-```
-
-**Response Handling:**
-
-- Store `access_token` in localStorage
-- Navigate to `/dashboard` on success
-- Log errors if code or code_verifier missing
-
-### 8. Fetch User Profile Data
-
-- **File:** `src/auth/spotify-profile.js`
-- **Function:** `getUserProfile()`
-- **Endpoint:** `https://api.spotify.com/v1/me`
-- **Headers:** `Authorization: Bearer ${access_token}`
-
-**Returns:**
-
-- User display name
-- Country
-- Followers count
-- Profile images
-
-**Used by:** `src/components/Profile.jsx` to display user info in dashboard
+its stored in local storage and deleted when user logs out.
