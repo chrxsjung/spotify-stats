@@ -20,6 +20,12 @@
 6. then spotify verifies the code and if it's good they send me a token i can make api requests with.
 7. it's stored in local storage and deleted when user logs out.
 
+the spotify API returns JSON.
+based on the stat i want to extract (artists, genres, tracks),
+i create one object with a key (like artists or tracks)
+that holds an array of objects from data.items.
+then, the function processes that array to display stats in the app.
+
 
 ### react 
 
