@@ -1,5 +1,5 @@
 import Track from "./Track.jsx";
-import { getSpotifyTracks } from "../auth/spotify-tracks";
+import { getSpotifyTracks } from "../api/spotify-tracks";
 import { useState, useEffect } from "react";
 
 function TrackCard() {

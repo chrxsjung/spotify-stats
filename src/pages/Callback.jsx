@@ -31,12 +31,10 @@ function Callback() {
   // - then redirect the user to the dashboard
 
   useEffect(() => {
-    // Check for error first (user cancelled)
     const error = new URLSearchParams(window.location.search).get("error");
     if (error) {
-      // Clean up any stored data
       localStorage.removeItem("code_verifier");
-      navigate("/"); // Redirect back to home page
+      navigate("/");
       return;
     }
 
@@ -44,43 +42,15 @@ function Callback() {
     const codeVerifier = localStorage.getItem("code_verifier");
 
     if (!code || !codeVerifier) {
-      console.error("Missing code or code_verifier");
-      navigate("/"); // Redirect back to home page if missing required data
+      navigate("/");
       return;
     }
 
-    /*
-     * Spotify Token Request Parameters:
-     *
-     * Field           | Value (example)
-     * ----------------|------------------
-     * client_id       | your VITE_SPOTIFY_CLIENT_ID
-     * grant_type      | "authorization_code"
-     * code            | the code from URL
-     * redirect_uri    | your redirect URI
-     * code_verifier   | from localStorage
-     */
+    // 👉 Move code_verifier to cookie so server can access it
+    document.cookie = `code_verifier=${codeVerifier}; path=/; secure`;
 
-    const body = new URLSearchParams();
-    body.append("client_id", CLIENT_ID);
-    body.append("grant_type", "authorization_code");
-    body.append("code", code);
-    body.append("redirect_uri", REDIRECT_URI);
-    body.append("code_verifier", codeVerifier);
-
-    fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.access_token) {
-          localStorage.setItem("access_token", data.access_token);
-        }
-
-        navigate("/dashboard");
-      });
+    // Redirect to API callback (server handles token exchange)
+    window.location.href = `/api/callback?code=${code}`;
   }, []);
 
   return <div className="text-white text-center mt-20">Logging you in...</div>;

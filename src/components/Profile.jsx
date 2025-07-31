@@ -1,4 +1,4 @@
-import { getUserProfile } from "../auth/spotify-profile.js";
+import { getUserProfile } from "../api/spotify-profile.js";
 import { useState, useEffect } from "react";
 import PlayingNow from "./PlayingNow.jsx";
 

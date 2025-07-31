@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCurrentlyPlaying } from "../auth/spotify-tracks.js";
+import { getCurrentlyPlaying } from "../api/spotify-tracks.js";
 
 function PlayingNow() {
   const [currentTrack, setCurrentTrack] = useState(null);

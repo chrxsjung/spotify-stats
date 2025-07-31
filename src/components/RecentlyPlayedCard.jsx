@@ -1,5 +1,5 @@
 import RecentlyPlayed from "./RecentlyPlayed.jsx";
-import { getRecentlyPlayed } from "../auth/spotify-recent.js";
+import { getRecentlyPlayed } from "../api/spotify-recent";
 import { useState, useEffect } from "react";
 
 function RecentlyPlayedCard() {

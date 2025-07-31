@@ -1,4 +1,4 @@
-import { getUserGenres } from "../auth/spotify-genre";
+import { getUserGenres } from "../api/spotify-genre";
 import { useState, useEffect } from "react";
 
 function GenreCard() {

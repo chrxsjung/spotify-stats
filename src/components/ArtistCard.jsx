@@ -1,5 +1,5 @@
 import Artist from "./Artist.jsx";
-import { getSpotifyArtists } from "../auth/spotify-artists";
+import { getSpotifyArtists } from "../api/spotify-artists";
 import { useState, useEffect } from "react";
 
 function ArtistCard() {
